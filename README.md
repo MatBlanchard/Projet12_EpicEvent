@@ -31,6 +31,7 @@ Créez un super utilisateur :
 python EpicEvent\manage.py createsuperuser
 ```
 Ce super utilisateur sera automatiquement intégré à l'équipe de gestion et pourra donc créer d'autres utilisateurs.
+
 Il ne vous reste plus qu'à lancez le serveur : 
 ```
 python EpicEvent\manage.py runserver
