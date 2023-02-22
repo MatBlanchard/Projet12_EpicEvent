@@ -1,7 +1,7 @@
 # OpenClassrooms: Projet 12 - EpicEvent
 Projet réalisé dans le cadre de ma formation OpenClassrooms Développeur d'Applications Python.  
-Il s'agit d'une API réalisée avec Django pour une société fictive, SoftDesk.  
-L'application permet de remonter et suivre des problèmes techniques.
+Il s'agit d'une API réalisée avec Django pour une société fictive, EpicEvent.  
+L'application permet de gérer des évenements pour les différents clients de l'entreprise.
 ## Documentation
 Tout les endpoints, leurs détails ainsi que des exemples d'utilisation sont décrits dans la [documentation](https://documenter.getpostman.com/view/25251122/2s93CLtEDY).
 ## Installation et lancement
