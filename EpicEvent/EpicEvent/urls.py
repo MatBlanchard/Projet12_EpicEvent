@@ -1,11 +1,14 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from app.views import SignupViewSet
+from app.views import SignupViewSet, ClientViewSet, ContractViewSet, EventViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 router = routers.SimpleRouter()
 router.register('', SignupViewSet, basename='signup')
+router.register('clients', ClientViewSet, basename='client')
+router.register('contracts', ContractViewSet, basename='contract')
+router.register('events', EventViewSet, basename='event')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

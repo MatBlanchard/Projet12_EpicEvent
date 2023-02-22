@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -24,6 +25,7 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, password, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('role', 'management')
 
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff=True.')
@@ -67,18 +69,24 @@ class Client(models.Model):
     company_name = models.CharField(max_length=250)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now_add=True)
-    sales_contact = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='sales_contact')
+    sales_contact = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='clients')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
+
+    def __str__(self):
+        return self.email
 
 
 class Contract(models.Model):
-    sales_contact = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    client = models.ForeignKey(to=Client, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now_add=True)
-    is_active = models.BooleanField(default=True)
-    amount = models.FloatField(default=0.0)
+    is_active = models.BooleanField()
+    amount = models.FloatField()
     payment_due = models.DateTimeField(auto_now_add=False)
+    sales_contact = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='sales_contracts')
+    client = models.ForeignKey(to=Client, on_delete=models.CASCADE, related_name='client_contracts')
+
+    def __str__(self):
+        return str(self.pk)
 
 
 class Event(models.Model):
@@ -89,12 +97,22 @@ class Event(models.Model):
     )
 
     name = models.CharField(max_length=30, null=True, blank=True)
-    support_contact = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    client = models.ForeignKey(to=Client, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now_add=True)
-    event_status = models.CharField(max_length=20, choices=STATUS_CHOICES)
-    attendees = models.IntegerField(default=0)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES)
+    attendees = models.IntegerField()
     event_date = models.DateTimeField(auto_now_add=False)
     notes = models.TextField(null=True, blank=True)
+    support_contact = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='support_events')
+    client = models.ForeignKey(to=Client, on_delete=models.CASCADE, related_name='client_events')
+    contract = models.OneToOneField(to=Contract, on_delete=models.CASCADE, related_name='contract_event')
+
+
+def update_date(sender, instance, **kwargs):
+    instance.date_updated = datetime.now()
+
+
+models.signals.pre_save.connect(update_date, sender=Client)
+models.signals.pre_save.connect(update_date, sender=Contract)
+models.signals.pre_save.connect(update_date, sender=Event)
 
