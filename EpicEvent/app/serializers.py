@@ -171,7 +171,7 @@ class ContractDetailSerializer(ModelSerializer):
     @staticmethod
     def get_event(instance):
         queryset = Event.objects.filter(contract_id=instance.id)
-        serializer = EventSerializer(queryset)
+        serializer = EventSerializer(queryset, many=True)
         return serializer.data
 
 
