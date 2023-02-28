@@ -14,7 +14,7 @@ class ClientPermission(BasePermission):
         if not (request.user and request.user.is_authenticated):
             return False
         elif view.action == 'create':
-            return request.user.role == 'management'
+            return request.user.role in ['management', 'sales']
         else:
             return True
 
@@ -33,7 +33,7 @@ class ContractPermission(BasePermission):
         if not (request.user and request.user.is_authenticated):
             return False
         elif view.action == 'create':
-            return request.user.role == 'management'
+            return request.user.role in ['management', 'sales']
         else:
             return True
 
@@ -52,7 +52,7 @@ class EventPermission(BasePermission):
         if not (request.user and request.user.is_authenticated):
             return False
         elif view.action == 'create':
-            return request.user.role == 'management'
+            return request.user.role in ['management', 'sales']
         else:
             return True
 
